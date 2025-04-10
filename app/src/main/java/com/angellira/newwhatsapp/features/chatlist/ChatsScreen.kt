@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -39,168 +40,153 @@ import androidx.compose.ui.unit.sp
 import com.angellira.newwhatsapp.ui.theme.NewWhatsappTheme
 import kotlin.random.Random
 
-class ChatsListScreenState(
-    val currentUser: User,
-    val filters: List<String> = emptyList(),
-    val chats: List<Chat> = emptyList(),
-)
-
-class Chat(
-    val avatar: String?,
-    val name: String,
-    val lastMessage: Message,
-    val unreadMessages: Int
-)
-
-class Message(
-    val text: String,
-    val date: String,
-    val isRead: Boolean,
-    val author: User,
-)
-
-data class User(
-    val name: String,
-)
-
 @Composable
 fun ChatsScreen(
     state: ChatsListScreenState,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier.fillMaxSize(),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        item {
-            Row(
-                Modifier
-                    .clip(CircleShape)
-                    .fillMaxWidth()
-                    .background(Color.Gray)
-                    .padding(16.dp)
-
-            ) {
-                Icon(Icons.Default.Search, contentDescription = null)
-                Spacer(Modifier.size(8.dp))
-                Text("Search...")
+    when (state) {
+        ChatsListScreenState.Loading -> {
+            Box(modifier.fillMaxSize()) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         }
 
-        item {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                state.filters.forEach { filter ->
-                    Box(
+        is ChatsListScreenState.Success -> {
+            LazyColumn(
+                modifier.fillMaxSize(),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                item {
+                    Row(
                         Modifier
                             .clip(CircleShape)
+                            .fillMaxWidth()
                             .background(Color.Gray)
-                            .padding(16.dp, 8.dp),
+                            .padding(16.dp)
 
-                        ) {
-                        Text(filter)
+                    ) {
+                        Icon(Icons.Default.Search, contentDescription = null)
+                        Spacer(Modifier.size(8.dp))
+                        Text("Search...")
                     }
                 }
-            }
-        }
-        items(state.chats) { chat ->
-            val avatarSize = 54.dp
-            Row(Modifier.fillMaxSize()) {
-                chat.avatar?.let {
-                    Box(
-                        Modifier
-                            .size(avatarSize)
-                            .clip(CircleShape)
-                            .background(
-                                Color(
-                                    Random.nextInt(1, 255),
-                                    Random.nextInt(1, 255),
-                                    Random.nextInt(1, 255)
-                                )
-                            )
-                    )
-                } ?:
-                    Box(
-                        Modifier
-                            .size(avatarSize)
-                            .clip(CircleShape)
-                            .background(
-                                Color(
-                                    Random.nextInt(1, 255),
-                                    Random.nextInt(1, 255),
-                                    Random.nextInt(1, 255)
-                                )
-                            )
-                    ) {
-                        Text(
-                            chat.name.first().toString(),
-                            Modifier.align(Alignment.Center),
-                            style = TextStyle.Default.copy(
-                                fontSize = 24.sp
-                            )
-                        )
-                    }
 
-                Spacer(Modifier.size(16.dp))
-                Column(
-                    Modifier.heightIn(avatarSize),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            chat.name,
-                            Modifier.weight(1f),
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1,
-                            style = TextStyle.Default.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
+                item {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        state.filters.forEach { filter ->
+                            Box(
+                                Modifier
+                                    .clip(CircleShape)
+                                    .background(Color.Gray)
+                                    .padding(16.dp, 8.dp),
 
-                                )
-                        )
-                        Spacer(Modifier.size(8.dp))
-                        Text(
-                            chat.lastMessage.date, style = TextStyle.Default.copy(
-                                fontSize = 14.sp,
-                            )
-                        )
-                    }
-
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(Modifier.weight(1f)) {
-                            if (state.currentUser != chat.lastMessage.author) {
-                                Icon(Icons.Default.DoneAll, contentDescription = null)
+                                ) {
+                                Text(filter)
                             }
-                            Spacer(Modifier.size(4.dp))
-                            Text(
-                                chat.lastMessage.text,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
-                            )
                         }
-                        Box(
+                    }
+                }
+                items(state.chats) { chat ->
+                    val avatarSize = 54.dp
+                    Row(Modifier.fillMaxSize()) {
+                        chat.avatar?.let {
+                            Box(
+                                Modifier
+                                    .size(avatarSize)
+                                    .clip(CircleShape)
+                                    .background(
+                                        Color(
+                                            Random.nextInt(1, 255),
+                                            Random.nextInt(1, 255),
+                                            Random.nextInt(1, 255)
+                                        )
+                                    )
+                            )
+                        } ?: Box(
                             Modifier
-                                .size(30.dp)
+                                .size(avatarSize)
                                 .clip(CircleShape)
-                                .background(Color.Green)
-                                .padding(4.dp)
+                                .background(
+                                    Color(
+                                        Random.nextInt(1, 255),
+                                        Random.nextInt(1, 255),
+                                        Random.nextInt(1, 255)
+                                    )
+                                )
                         ) {
                             Text(
-                                "99",
+                                chat.name.first().toString(),
                                 Modifier.align(Alignment.Center),
                                 style = TextStyle.Default.copy(
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontSize = 24.sp
                                 )
                             )
+                        }
+
+                        Spacer(Modifier.size(16.dp))
+                        Column(
+                            Modifier.heightIn(avatarSize),
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    chat.name,
+                                    Modifier.weight(1f),
+                                    overflow = TextOverflow.Ellipsis,
+                                    maxLines = 1,
+                                    style = TextStyle.Default.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 18.sp,
+
+                                        )
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(
+                                    chat.lastMessage.date, style = TextStyle.Default.copy(
+                                        fontSize = 14.sp,
+                                    )
+                                )
+                            }
+
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(Modifier.weight(1f)) {
+                                    if (state.currentUser != chat.lastMessage.author) {
+                                        Icon(Icons.Default.DoneAll, contentDescription = null)
+                                    }
+                                    Spacer(Modifier.size(4.dp))
+                                    Text(
+                                        chat.lastMessage.text,
+                                        overflow = TextOverflow.Ellipsis,
+                                        maxLines = 1
+                                    )
+                                }
+                                Box(
+                                    Modifier
+                                        .size(30.dp)
+                                        .clip(CircleShape)
+                                        .background(Color.Green)
+                                        .padding(4.dp)
+                                ) {
+                                    Text(
+                                        "99",
+                                        Modifier.align(Alignment.Center),
+                                        style = TextStyle.Default.copy(
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -216,7 +202,7 @@ private fun ChatListScreenPreview() {
     NewWhatsappTheme {
         Surface {
             ChatsScreen(
-                state = ChatsListScreenState(
+                state = ChatsListScreenState.Success(
                     currentUser = User("Joao"),
                     filters = listOf("All", "Unread", "Groups"),
                     chats = List(10) {
@@ -232,8 +218,19 @@ private fun ChatListScreenPreview() {
                             unreadMessages = 2
                         )
                     }
-
                 )
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ChatListScreenWithLoadingStatePreview() {
+    NewWhatsappTheme {
+        Surface {
+            ChatsScreen(
+                state = ChatsListScreenState.Loading
             )
         }
     }
