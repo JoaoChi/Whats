@@ -1,5 +1,9 @@
 package com.angellira.newwhatsapp.features.chatlist
 
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.angellira.newwhatsapp.ui.theme.NewWhatsappTheme
 import kotlin.random.Random
 
@@ -91,19 +100,15 @@ fun ChatsScreen(
                 items(state.chats) { chat ->
                     val avatarSize = 54.dp
                     Row(Modifier.fillMaxSize()) {
-                        chat.avatar?.let {
-                            Box(
-                                Modifier
-                                    .size(avatarSize)
-                                    .clip(CircleShape)
-                                    .background(
-                                        Color(
-                                            Random.nextInt(1, 255),
-                                            Random.nextInt(1, 255),
-                                            Random.nextInt(1, 255)
-                                        )
-                                    )
-                            )
+                        chat.avatar?.let { avatar ->
+                            SubcomposeAsyncImage(
+                                avatar,
+                                contentDescription = null,
+                                Modifier.size(avatarSize).clip(CircleShape),
+                                loading = {
+                                    Box(Modifier.fillMaxSize().shimmer())
+                                })
+
                         } ?: Box(
                             Modifier
                                 .size(avatarSize)
@@ -195,6 +200,36 @@ fun ChatsScreen(
     }
 }
 
+@Composable
+private fun Modifier.shimmer(
+    colors: List<Color> =
+        listOf(
+            Color.Gray.copy(alpha = 0.5f),
+            Color.Gray.copy(alpha = 0.1f),
+            Color.Gray.copy(alpha = 0.5f),
+        )
+): Modifier {
+    val infiniteTransition =
+        rememberInfiniteTransition(label = "infiniteTransation")
+    val localConfig = LocalConfiguration.current
+    val target = (localConfig.screenWidthDp * 3).toFloat()
+    val scale = infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = target,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000)
+        ),
+        label = "shimmer"
+    )
+    return this.then(
+        Modifier.background(
+            Brush.linearGradient(
+                colors = colors,
+                end = Offset(x = scale.value, y = scale.value),
+            )
+        )
+    )
+}
 
 @Preview
 @Composable
