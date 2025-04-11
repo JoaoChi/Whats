@@ -91,11 +91,5 @@ class ChatsListViewModel : ViewModel() {
 }
 
 private val avatars = mutableListOf(
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/WhatsApp%20Image%202025-03-24%20at%2014.27.06.jpeg?alt=media&token=feaf84ac-3ba7-4752-8e23-0d1f7b7b0a05",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/WhatsApp%20Image%202025-03-24%20at%2014.27.07%20(1).jpeg?alt=media&token=88e790bd-8155-4d03-915e-4c74ce69f73e",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/WhatsApp%20Image%202025-03-24%20at%2014.27.07.jpeg?alt=media&token=855b8357-1102-45d5-b5af-bafc0a912348",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/pastor-alemao-filhote.png?alt=media&token=1e01c1bd-ae19-46e5-b66e-7747f7d0c200",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/scottish-fold-cat-kitten-sitting-isolated-transparent-photo-png.webp?alt=media&token=008bd8c6-8cfc-4fe1-971a-841f5a9e811a",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/scottish-fold-cat-kitten-sitting-isolated-transparent-photo-png.webp?alt=media&token=008bd8c6-8cfc-4fe1-971a-841f5a9e811a",
-    "https://firebasestorage.googleapis.com/v0/b/imagepets-82fe7.appspot.com/o/scottish-fold-cat-kitten-sitting-isolated-transparent-photo-png.webp?alt=media&token=008bd8c6-8cfc-4fe1-971a-841f5a9e811a",
+    "https://randomuser.me/api/portraits/men/32.jpg",
 )

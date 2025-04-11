@@ -102,7 +102,7 @@ fun ChatsScreen(
                     Row(Modifier.fillMaxSize()) {
                         chat.avatar?.let { avatar ->
                             SubcomposeAsyncImage(
-                                avatar,
+                                model = avatar,
                                 contentDescription = null,
                                 Modifier.size(avatarSize).clip(CircleShape),
                                 loading = {
